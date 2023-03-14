@@ -1,6 +1,6 @@
-use std::{path::Path, env};
+use std::{env, path::Path};
 
-use sqlx::sqlite::{SqlitePool, SqliteConnectOptions};
+use sqlx::sqlite::{SqliteConnectOptions, SqlitePool};
 
 pub struct ConnectionManager {
     pub pool: SqlitePool,
@@ -21,10 +21,9 @@ impl ConnectionManager {
         } else {
             // Development migrations dir
             let crate_dir = std::env::var("CARGO_MANIFEST_DIR")?;
-            Path::new(&crate_dir)
-                .join("./migrations")
+            Path::new(&crate_dir).join("./migrations")
         };
-    
+
         sqlx::migrate::Migrator::new(migrations)
             .await?
             .run(&pool)
